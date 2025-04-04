@@ -35,46 +35,46 @@
       var fullscreenButton = document.querySelector("#unity-fullscreen-button");
       var warningBanner = document.querySelector("#unity-warning");
 
+      alert("Пожалуйста, подождите, идет загрузка игры...");
+//       async function sendGameData() {
+//         if (window.Telegram && window.Telegram.WebApp) {
+//   const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString();
+//   const username = window.Telegram?.WebApp?.initDataUnsafe?.user?.username || "Unknown";
+//           alert(window.Telegram.WebApp.initDataUnsafe.user.username);
+//           // sendDataToUnity(userId, username);
+//   if (!userId) {
+//     alert("Ошибка: UserID не найден");
+//     return;
+//   }
 
-      async function sendGameData() {
-        if (window.Telegram && window.Telegram.WebApp) {
-  const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString();
-  const username = window.Telegram?.WebApp?.initDataUnsafe?.user?.username || "Unknown";
-          alert(window.Telegram.WebApp.initDataUnsafe.user.username);
-          // sendDataToUnity(userId, username);
-  if (!userId) {
-    alert("Ошибка: UserID не найден");
-    return;
-  }
-
-  // Пример данных из игры (замени на свои)
-  const gameData = {
-    username: username,
-    score: parseInt(prompt("Введите ваш Score:"), 10),
-  };
+//   // Пример данных из игры (замени на свои)
+//   const gameData = {
+//     username: username,
+//     score: parseInt(prompt("Введите ваш Score:"), 10),
+//   };
 
 
 
-  try {
-    const response = await fetch("/api/firebase-config", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, ...gameData })
-    });
+//   try {
+//     const response = await fetch("/api/firebase-config", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ userId, ...gameData })
+//     });
 
-    const result = await response.json();
-    if (response.ok) {
-      alert("✅ Данные успешно отправлены!");
-    } else {
-      console.error("Ошибка при отправке данных:", result.error);
-      alert(`❌ Ошибка: ${result.error}`);
-    }
-  } catch (error) {
-    console.error("Ошибка при запросе:", error);
-    alert("❌ Произошла ошибка при отправке данных.");
-  }
-}
-}
+//     const result = await response.json();
+//     if (response.ok) {
+//       alert("✅ Данные успешно отправлены!");
+//     } else {
+//       console.error("Ошибка при отправке данных:", result.error);
+//       alert(`❌ Ошибка: ${result.error}`);
+//     }
+//   } catch (error) {
+//     console.error("Ошибка при запросе:", error);
+//     alert("❌ Произошла ошибка при отправке данных.");
+//   }
+// }
+// }
 
 
 // function sendDataToUnity(userId, username) {
