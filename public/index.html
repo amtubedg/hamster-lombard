@@ -66,7 +66,11 @@ window.SaveGameData = function(userId, gameDataJson) {
       if (result.status === 200) {
         alert("Документ успешно сохранён");
         // Отправляем сообщение в Unity, имя объекта должно совпадать с именем вашего GameManager
-        SendMessage("GameManager", "OnSaveSuccess", "");
+        if (typeof unityInstance !== "undefined" && unityInstance != null) {
+  unityInstance.SendMessage("GameManager", "OnSaveSuccess", "");
+} else {
+  alert("unityInstance не загружен");
+}
       } else {
         console.error("Ошибка при сохранении: ", result.body.error);
         SendMessage("GameManager", "OnSaveError", result.body.error);
