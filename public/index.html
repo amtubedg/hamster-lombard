@@ -39,18 +39,24 @@
   if (window.Telegram && window.Telegram.WebApp) {
     const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString();
     const username = window.Telegram?.WebApp?.initDataUnsafe?.user?.username || "Unknown";
+
     alert(`userId: ${userId}, username: ${username}`);
+
     if (userId) {
-      // передаём userId в Unity
-      if (typeof unityInstance !== "undefined" && unityInstance !== null) {
-        unityInstance.SendMessage("GameManager", "SetUserID", userId);
+      // ✅ Убедимся, что unityInstance уже определён
+      if (typeof window.unityInstance !== "undefined" && window.unityInstance !== null) {
+        window.unityInstance.SendMessage("GameManager", "SetUserID", userId);
+        alert(`gnac Unity: ${userId}`);
         console.log("✅ userId отправлен в Unity:", userId);
+      } else {
+        alert("⚠️ unityInstance ещё не готов!");
       }
     } else {
       alert("❌ Ошибка: UserID не найден");
     }
   }
 }
+
 
 window.SaveGameData = function(userId, gameDataJson) {
     // Преобразуем JSON-данные в объект
