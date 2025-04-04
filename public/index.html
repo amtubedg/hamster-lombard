@@ -83,7 +83,7 @@ window.SaveGameData = function(userId, gameDataJson) {
   };
 
   window.LoadGameData = function(userId) {
-  fetch("/api/get-user-data?userId=" + userId)
+  fetch("/api/firebase-config.js?userId=" + userId)
     .then(response => response.json())
     .then(data => {
       if (typeof unityInstance !== "undefined" && unityInstance !== null) {
