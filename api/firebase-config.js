@@ -25,7 +25,7 @@ export default async (req, res) => {
   try {
     console.log("📥 Данные для сохранения:", { userId, ...data });
 
-    const userDocRef = db.collection("users").doc(userId);
+    const userDocRef = db.collection("All_users").doc(userId);
     const userDoc = await userDocRef.get();
 
     if (userDoc.exists) {
