@@ -47,39 +47,40 @@
     return;
   }
 }}
-window.SaveGameData = function(userId, gameDataJson) {
-    // Преобразуем JSON-данные в объект
-    var data = JSON.parse(gameDataJson);
-    db.collection("users").doc(userId).set(data)
-      .then(function() {
-        console.log("Документ успешно сохранён");
-        // Передаём сообщение в Unity (Имя объекта и метода должны совпадать)
-        SendMessage("GameManager", "OnSaveSuccess", "");
-      })
-      .catch(function(error) {
-        console.error("Ошибка при сохранении: ", error);
-        SendMessage("GameManager", "OnSaveError", error.toString());
-      });
-  };
+sendGameData();
+// window.SaveGameData = function(userId, gameDataJson) {
+//     // Преобразуем JSON-данные в объект
+//     var data = JSON.parse(gameDataJson);
+//     db.collection("users").doc(userId).set(data)
+//       .then(function() {
+//         console.log("Документ успешно сохранён");
+//         // Передаём сообщение в Unity (Имя объекта и метода должны совпадать)
+//         SendMessage("GameManager", "OnSaveSuccess", "");
+//       })
+//       .catch(function(error) {
+//         console.error("Ошибка при сохранении: ", error);
+//         SendMessage("GameManager", "OnSaveError", error.toString());
+//       });
+//   };
 
-  // Функция для загрузки данных из Firestore
-  window.LoadGameData = function(userId) {
-    db.collection("users").doc(userId).get()
-      .then(function(doc) {
-        if (doc.exists) {
-          var data = doc.data();
-          // Передаём данные обратно в Unity в виде JSON
-          SendMessage("GameManager", "OnLoadSuccess", JSON.stringify(data));
-        } else {
-          console.log("Документ не найден");
-          SendMessage("GameManager", "OnLoadError", "Документ не найден");
-        }
-      })
-      .catch(function(error) {
-        console.error("Ошибка при загрузке: ", error);
-        SendMessage("GameManager", "OnLoadError", error.toString());
-      });
-  };
+//   // Функция для загрузки данных из Firestore
+//   window.LoadGameData = function(userId) {
+//     db.collection("users").doc(userId).get()
+//       .then(function(doc) {
+//         if (doc.exists) {
+//           var data = doc.data();
+//           // Передаём данные обратно в Unity в виде JSON
+//           SendMessage("GameManager", "OnLoadSuccess", JSON.stringify(data));
+//         } else {
+//           console.log("Документ не найден");
+//           SendMessage("GameManager", "OnLoadError", "Документ не найден");
+//         }
+//       })
+//       .catch(function(error) {
+//         console.error("Ошибка при загрузке: ", error);
+//         SendMessage("GameManager", "OnLoadError", error.toString());
+//       });
+//   };
 
 
   // // Пример данных из игры (замени на свои)
