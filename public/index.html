@@ -102,53 +102,6 @@ window.SaveGameData = function(userId, gameDataJson) {
 };
 
 
-  // // Пример данных из игры (замени на свои)
-  // const gameData = {
-  // username: username,
-  // score: parseInt(prompt("Введите ваш Score:"), 10),
-  // };
-
-
-
-  // try {
-  // const response = await fetch("/api/firebase-config", {
-  // method: "POST",
-  // headers: { "Content-Type": "application/json" },
-  // body: JSON.stringify({ userId, ...gameData })
-  // });
-
-  // const result = await response.json();
-  // if (response.ok) {
-  // alert("✅ Данные успешно отправлены!");
-  // } else {
-  // console.error("Ошибка при отправке данных:", result.error);
-  // alert(`❌ Ошибка: ${result.error}`);
-  // }
-  // } catch (error) {
-  // console.error("Ошибка при запросе:", error);
-  // alert("❌ Произошла ошибка при отправке данных.");
-  // }
-  // }
-  // }
-
-
-  // function sendDataToUnity(userId, username) {
-  // if (typeof unityInstance !== "undefined" && unityInstance !== null) {
-  // unityInstance.SendMessage("Code", "SetUserID", userId);
-  // unityInstance.SendMessage("Code", "SetUsername", username);
-  // console.log("Данные отправлены в Unity:", { userId, username });
-  // } else {
-  // console.error("Unity instance не инициализирован");
-  // }
-  // }
-
-  // Shows a temporary message banner/ribbon for a few seconds, or
-  // a permanent error message on top of the canvas if type=='error'.
-  // If type=='warning', a yellow highlight color is used.
-  // Modify or remove this function to customize the visually presented
-  // way that non-critical warnings and error messages are presented to the
-  // user.
-
   function unityShowBanner(msg, type) {
   function updateBannerVisibility() {
   warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
