@@ -35,7 +35,7 @@
       var fullscreenButton = document.querySelector("#unity-fullscreen-button");
       var warningBanner = document.querySelector("#unity-warning");
       
-      alert("mkmkm, подождите, идет загрузка игры...");
+      // alert("mkmkm, подождите, идет загрузка игры...");
       async function sendGameData() {
         if (window.Telegram && window.Telegram.WebApp) {
   const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString();
@@ -64,7 +64,7 @@ window.SaveGameData = function(userId, gameDataJson) {
     })
     .then(function(result) {
       if (result.status === 200) {
-        alert("Документ успешно сохранён");
+        // alert("Документ успешно сохранён");
         // Отправляем сообщение в Unity, имя объекта должно совпадать с именем вашего GameManager
         SendMessage("GameManager", "OnSaveSuccess", "");
       } else {
