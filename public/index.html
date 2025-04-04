@@ -36,144 +36,181 @@
       var warningBanner = document.querySelector("#unity-warning");
 
       alert("mkmkm, подождите, идет загрузка игры...");
-//       async function sendGameData() {
-//         if (window.Telegram && window.Telegram.WebApp) {
-//   const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString();
-//   const username = window.Telegram?.WebApp?.initDataUnsafe?.user?.username || "Unknown";
-//           alert(window.Telegram.WebApp.initDataUnsafe.user.username);
-//           // sendDataToUnity(userId, username);
-//   if (!userId) {
-//     alert("Ошибка: UserID не найден");
-//     return;
-//   }
+      async function sendGameData() {
+        if (window.Telegram && window.Telegram.WebApp) {
+  const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString();
+  const username = window.Telegram?.WebApp?.initDataUnsafe?.user?.username || "Unknown";
+          alert(window.Telegram.WebApp.initDataUnsafe.user.username);
+          // sendDataToUnity(userId, username);
+  if (!userId) {
+    alert("Ошибка: UserID не найден");
+    return;
+  }
+}}
+window.SaveGameData = function(userId, gameDataJson) {
+    // Преобразуем JSON-данные в объект
+    var data = JSON.parse(gameDataJson);
+    db.collection("users").doc(userId).set(data)
+      .then(function() {
+        console.log("Документ успешно сохранён");
+        // Передаём сообщение в Unity (Имя объекта и метода должны совпадать)
+        SendMessage("GameManager", "OnSaveSuccess", "");
+      })
+      .catch(function(error) {
+        console.error("Ошибка при сохранении: ", error);
+        SendMessage("GameManager", "OnSaveError", error.toString());
+      });
+  };
 
-//   // Пример данных из игры (замени на свои)
-//   const gameData = {
-//     username: username,
-//     score: parseInt(prompt("Введите ваш Score:"), 10),
-//   };
-
-
-
-//   try {
-//     const response = await fetch("/api/firebase-config", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({ userId, ...gameData })
-//     });
-
-//     const result = await response.json();
-//     if (response.ok) {
-//       alert("✅ Данные успешно отправлены!");
-//     } else {
-//       console.error("Ошибка при отправке данных:", result.error);
-//       alert(`❌ Ошибка: ${result.error}`);
-//     }
-//   } catch (error) {
-//     console.error("Ошибка при запросе:", error);
-//     alert("❌ Произошла ошибка при отправке данных.");
-//   }
-// }
-// }
-
-
-// function sendDataToUnity(userId, username) {
-//       if (typeof unityInstance !== "undefined" && unityInstance !== null) {
-//         unityInstance.SendMessage("Code", "SetUserID", userId);
-//         unityInstance.SendMessage("Code", "SetUsername", username);
-//         console.log("Данные отправлены в Unity:", { userId, username });
-//       } else {
-//         console.error("Unity instance не инициализирован");
-//       }
-//     }
-    
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-
-      function unityShowBanner(msg, type) {
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+  // Функция для загрузки данных из Firestore
+  window.LoadGameData = function(userId) {
+    db.collection("users").doc(userId).get()
+      .then(function(doc) {
+        if (doc.exists) {
+          var data = doc.data();
+          // Передаём данные обратно в Unity в виде JSON
+          SendMessage("GameManager", "OnLoadSuccess", JSON.stringify(data));
+        } else {
+          console.log("Документ не найден");
+          SendMessage("GameManager", "OnLoadError", "Документ не найден");
         }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
-
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/Hamster Lombard.loader.js";
-      var config = {
-        dataUrl: buildUrl + "/Hamster Lombard.data",
-        frameworkUrl: buildUrl + "/Hamster Lombard.framework.js",
-        codeUrl: buildUrl + "/Hamster Lombard.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "Garden of Games",
-        productName: "Test Clicker",
-        productVersion: "1.0",
-        showBanner: unityShowBanner,
-      };
-
-      // By default, Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
-
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        container.className = "unity-mobile";
-        canvas.className = "unity-mobile";
-
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
+      })
+      .catch(function(error) {
+        console.error("Ошибка при загрузке: ", error);
+        SendMessage("GameManager", "OnLoadError", error.toString());
+      });
+  };
+</script>
 
 
-      } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
 
-        canvas.style.width = "960px";
-        canvas.style.height = "600px";
-      }
+  // // Пример данных из игры (замени на свои)
+  // const gameData = {
+  // username: username,
+  // score: parseInt(prompt("Введите ваш Score:"), 10),
+  // };
 
-      loadingBar.style.display = "block";
 
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-              }).then((unityInstance) => {
-                loadingBar.style.display = "none";
-                fullscreenButton.onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
-              }).catch((message) => {
-                alert(message);
-              });
-            };
 
-      document.body.appendChild(script);
+  // try {
+  // const response = await fetch("/api/firebase-config", {
+  // method: "POST",
+  // headers: { "Content-Type": "application/json" },
+  // body: JSON.stringify({ userId, ...gameData })
+  // });
 
-    </script>
+  // const result = await response.json();
+  // if (response.ok) {
+  // alert("✅ Данные успешно отправлены!");
+  // } else {
+  // console.error("Ошибка при отправке данных:", result.error);
+  // alert(`❌ Ошибка: ${result.error}`);
+  // }
+  // } catch (error) {
+  // console.error("Ошибка при запросе:", error);
+  // alert("❌ Произошла ошибка при отправке данных.");
+  // }
+  // }
+  // }
+
+
+  // function sendDataToUnity(userId, username) {
+  // if (typeof unityInstance !== "undefined" && unityInstance !== null) {
+  // unityInstance.SendMessage("Code", "SetUserID", userId);
+  // unityInstance.SendMessage("Code", "SetUsername", username);
+  // console.log("Данные отправлены в Unity:", { userId, username });
+  // } else {
+  // console.error("Unity instance не инициализирован");
+  // }
+  // }
+
+  // Shows a temporary message banner/ribbon for a few seconds, or
+  // a permanent error message on top of the canvas if type=='error'.
+  // If type=='warning', a yellow highlight color is used.
+  // Modify or remove this function to customize the visually presented
+  // way that non-critical warnings and error messages are presented to the
+  // user.
+
+  function unityShowBanner(msg, type) {
+  function updateBannerVisibility() {
+  warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+  }
+  var div = document.createElement('div');
+  div.innerHTML = msg;
+  warningBanner.appendChild(div);
+  if (type == 'error') div.style = 'background: red; padding: 10px;';
+  else {
+  if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+  setTimeout(function() {
+  warningBanner.removeChild(div);
+  updateBannerVisibility();
+  }, 5000);
+  }
+  updateBannerVisibility();
+  }
+
+  var buildUrl = "Build";
+  var loaderUrl = buildUrl + "/Hamster Lombard.loader.js";
+  var config = {
+  dataUrl: buildUrl + "/Hamster Lombard.data",
+  frameworkUrl: buildUrl + "/Hamster Lombard.framework.js",
+  codeUrl: buildUrl + "/Hamster Lombard.wasm",
+  streamingAssetsUrl: "StreamingAssets",
+  companyName: "Garden of Games",
+  productName: "Test Clicker",
+  productVersion: "1.0",
+  showBanner: unityShowBanner,
+  };
+
+  // By default, Unity keeps WebGL canvas render target size matched with
+  // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+  // Set this to false if you want to decouple this synchronization from
+  // happening inside the engine, and you would instead like to size up
+  // the canvas DOM size and WebGL render target sizes yourself.
+  // config.matchWebGLToCanvasSize = false;
+
+  if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+  // Mobile device style: fill the whole browser client area with the game canvas:
+
+  var meta = document.createElement('meta');
+  meta.name = 'viewport';
+  meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+  document.getElementsByTagName('head')[0].appendChild(meta);
+  container.className = "unity-mobile";
+  canvas.className = "unity-mobile";
+
+  // To lower canvas resolution on mobile devices to gain some
+  // performance, uncomment the following line:
+  // config.devicePixelRatio = 1;
+
+
+  } else {
+  // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+
+  canvas.style.width = "960px";
+  canvas.style.height = "600px";
+  }
+
+  loadingBar.style.display = "block";
+
+  var script = document.createElement("script");
+  script.src = loaderUrl;
+  script.onload = () => {
+  createUnityInstance(canvas, config, (progress) => {
+  progressBarFull.style.width = 100 * progress + "%";
+  }).then((unityInstance) => {
+  loadingBar.style.display = "none";
+  fullscreenButton.onclick = () => {
+  unityInstance.SetFullscreen(1);
+  };
+  }).catch((message) => {
+  alert(message);
+  });
+  };
+
+  document.body.appendChild(script);
+
+  </script>
 </body>
 
 </html>
