@@ -44,7 +44,7 @@
       // передаём userId в Unity
       if (typeof unityInstance !== "undefined" && unityInstance !== null) {
         unityInstance.SendMessage("GameManager", "SetUserID", userId);
-        console.log("✅ userId отправлен в Unity:", userId);
+        alert("✅ userId отправлен в Unity:", userId);
       }
     } else {
       alert("❌ Ошибка: UserID не найден");
