@@ -51,7 +51,6 @@
     }
   }
 }
-sendGameData();
 window.SaveGameData = function(userId, gameDataJson) {
     // Преобразуем JSON-данные в объект
     var data = JSON.parse(gameDataJson);
@@ -215,8 +214,9 @@ window.SaveGameData = function(userId, gameDataJson) {
           loadingBar.style.display = "none";
           fullscreenButton.onclick = () => {
             unityInstance.SetFullscreen(1);
-            sendGameData();
+            
       };
+      sendGameData();
       }).catch((message) => {
     alert(message);
     });
